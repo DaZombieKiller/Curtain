@@ -70,7 +70,7 @@ public sealed partial class RttiModule
     /// <summary>Gets the address of the <c>type_info</c> virtual function table.</summary>
     private bool TryGetTypeInfoVTable(out ulong address)
     {
-        foreach (PESection section in _file.Sections.Where(section => section.IsMemoryRead && !section.IsMemoryExecute))
+        foreach (PESection section in _file.Sections.Where(section => section.IsReadable && section.IsMemoryRead && !section.IsMemoryExecute))
         {
             BinaryStreamReader reader = section.CreateReader();
 
@@ -148,7 +148,7 @@ public sealed partial class RttiModule
         else
             BinaryPrimitives.WriteUInt64LittleEndian(vptr, _typeInfoVPtr);
 
-        foreach (PESection section in _file.Sections.Where(section => section.IsMemoryRead && !section.IsMemoryExecute))
+        foreach (PESection section in _file.Sections.Where(section => section.IsReadable && section.IsMemoryRead && !section.IsMemoryExecute))
         {
             BinaryStreamReader reader = section.CreateReader();
 
@@ -182,7 +182,7 @@ public sealed partial class RttiModule
         // Track object locators for later use when scanning for vtables.
         var locators = new Dictionary<ulong, RttiCompleteObjectLocator>();
         
-        foreach (PESection section in _file.Sections.Where(section => section.IsMemoryRead && !section.IsMemoryExecute))
+        foreach (PESection section in _file.Sections.Where(section => section.IsReadable && section.IsMemoryRead && !section.IsMemoryExecute))
         {
             BinaryStreamReader reader = section.CreateReader();
 
@@ -249,7 +249,7 @@ public sealed partial class RttiModule
 
     private void FindVTables(FrozenDictionary<ulong, RttiCompleteObjectLocator> locators)
     {
-        foreach (PESection section in _file.Sections.Where(section => section.IsMemoryRead && !section.IsMemoryExecute))
+        foreach (PESection section in _file.Sections.Where(section => section.IsReadable && section.IsMemoryRead && !section.IsMemoryExecute))
         {
             BinaryStreamReader reader = section.CreateReader();
 
