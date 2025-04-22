@@ -17,21 +17,24 @@ internal static class Program
                 var hierarchy = locator.ClassDescriptor.BaseClassArray.ClassDescriptors;
                 var baseClass = (RttiBaseClassDescriptor?)null;
 
-                for (int i = 1; i < hierarchy.Length; i++)
+                if (locator.Offset > 0 && locator.ClassDescriptor.Attributes.HasFlag(RttiClassHierarchyFlags.MultipleInheritance))
                 {
-                    if (hierarchy[i].MDisplacement == locator.Offset)
+                    for (int i = 1; i < hierarchy.Length; i++)
                     {
-                        baseClass = hierarchy[i];
-                        break;
+                        if (hierarchy[i].MDisplacement == locator.Offset)
+                        {
+                            baseClass = hierarchy[i];
+                            break;
+                        }
                     }
+
+                    writer.Write($"// {locator.Offset:X4}");
+
+                    if (baseClass != null)
+                        writer.WriteLine($" ({DecoratedName.UnDecorate(baseClass.TypeDescriptor.Name)})");
+                    else
+                        writer.WriteLine();
                 }
-
-                writer.Write($"// {locator.Offset:X4}");
-
-                if (baseClass != null)
-                    writer.WriteLine($" ({DecoratedName.UnDecorate(baseClass.TypeDescriptor.Name)})");
-                else
-                    writer.WriteLine();
 
                 writer.Write(DecoratedName.UnDecorate(type.Name));
 
