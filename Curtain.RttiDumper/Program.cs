@@ -14,9 +14,26 @@ internal static class Program
         {
             foreach (RttiCompleteObjectLocator locator in type.CompleteObjectLocators)
             {
-                writer.WriteLine($"// {locator.Offset:X4}");
-                writer.Write(DecoratedName.UnDecorate(type.Name));
                 var hierarchy = locator.ClassDescriptor.BaseClassArray.ClassDescriptors;
+                var baseClass = (RttiBaseClassDescriptor?)null;
+
+                for (int i = 1; i < hierarchy.Length; i++)
+                {
+                    if (hierarchy[i].MDisplacement == locator.Offset)
+                    {
+                        baseClass = hierarchy[i];
+                        break;
+                    }
+                }
+
+                writer.Write($"// {locator.Offset:X4}");
+
+                if (baseClass != null)
+                    writer.WriteLine($" ({DecoratedName.UnDecorate(baseClass.TypeDescriptor.Name)})");
+                else
+                    writer.WriteLine();
+
+                writer.Write(DecoratedName.UnDecorate(type.Name));
 
                 for (int i = 1; i < hierarchy.Length; i += 1 + (int)hierarchy[i].BaseCount)
                 {
