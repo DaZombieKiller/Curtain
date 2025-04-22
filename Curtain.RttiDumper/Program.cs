@@ -49,6 +49,9 @@ internal static class Program
                     if (hierarchy[i].IsPrivateOrProtected != isPrivate)
                         writer.Write(isPrivate ? "public " : "private ");
 
+                    if (hierarchy[i].IsVirtual)
+                        writer.Write("virtual ");
+
                     writer.Write(DecoratedName.UnDecorate(hierarchy[i].TypeDescriptor.Name, UnDecorateFlags.NoUdtPrefix));
                 }
 

@@ -20,6 +20,8 @@ public sealed class RttiBaseClassDescriptor : RttiObject, IRttiObject<RttiBaseCl
 
     public bool IsPrivateOrProtected => (Attributes & RttiBaseClassFlags.PrivateOrProtectedMask) != 0;
 
+    public bool IsVirtual => Attributes.HasFlag(RttiBaseClassFlags.VirtualBaseOfContainingObject);
+
     internal RttiBaseClassDescriptor(RttiModule module, uint rva)
         : base(module, rva)
     {
