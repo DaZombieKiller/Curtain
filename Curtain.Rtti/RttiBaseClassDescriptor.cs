@@ -18,6 +18,8 @@ public sealed class RttiBaseClassDescriptor : RttiObject, IRttiObject<RttiBaseCl
 
     public RttiClassHierarchyDescriptor? ClassDescriptor { get; }
 
+    public bool IsPrivateOrProtected => (Attributes & RttiBaseClassFlags.PrivateOrProtectedMask) != 0;
+
     internal RttiBaseClassDescriptor(RttiModule module, uint rva)
         : base(module, rva)
     {

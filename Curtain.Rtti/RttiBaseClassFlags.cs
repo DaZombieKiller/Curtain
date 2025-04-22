@@ -27,4 +27,7 @@ public enum RttiBaseClassFlags : uint
 
     /// <summary></summary>
     HasClassHierarchy = 1 << 6,
+
+    /// <summary>Mask of all flags that define non-public inheritance.</summary>
+    PrivateOrProtectedMask = NotVisible | PrivateOrProtectedBase | PrivateOrProtectedInCompleteObject,
 }

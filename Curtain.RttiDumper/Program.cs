@@ -16,6 +16,7 @@ internal static class Program
             {
                 var hierarchy = locator.ClassDescriptor.BaseClassArray.ClassDescriptors;
                 var baseClass = (RttiBaseClassDescriptor?)null;
+                var isPrivate = type.Kind == RttiTypeKind.Class;
 
                 if (locator.Offset > 0 && locator.ClassDescriptor.Attributes.HasFlag(RttiClassHierarchyFlags.MultipleInheritance))
                 {
@@ -44,6 +45,9 @@ internal static class Program
                         writer.Write(" : ");
                     else
                         writer.Write(", ");
+
+                    if (hierarchy[i].IsPrivateOrProtected != isPrivate)
+                        writer.Write(isPrivate ? "public " : "private ");
 
                     writer.Write(DecoratedName.UnDecorate(hierarchy[i].TypeDescriptor.Name, UnDecorateFlags.NoUdtPrefix));
                 }
