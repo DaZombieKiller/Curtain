@@ -30,6 +30,7 @@ public sealed class RttiCompleteObjectLocator : RttiObject, IRttiObject<RttiComp
 
         TypeDescriptor = module.GetOrAddObject<RttiTypeDescriptor>(typeDescriptorPtr) ?? throw new ArgumentException(null, nameof(rva));
         ClassDescriptor = module.GetOrAddObject<RttiClassHierarchyDescriptor>(classDescriptorPtr) ?? throw new ArgumentException(null, nameof(rva));
+        TypeDescriptor.CompleteObjectLocatorsList.Add(this);
     }
 
     /// <inheritdoc/>
