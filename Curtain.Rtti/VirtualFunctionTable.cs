@@ -6,7 +6,7 @@ public sealed class VirtualFunctionTable : RttiObject, IRttiObject<VirtualFuncti
 {
     public RttiCompleteObjectLocator CompleteObjectLocator { get; }
 
-    public ImmutableArray<ulong> FunctionPointers { get; }
+    public ImmutableArray<uint> FunctionPointers { get; }
 
     internal VirtualFunctionTable(RttiModule module, uint rva)
         : base(module, rva)
@@ -15,7 +15,7 @@ public sealed class VirtualFunctionTable : RttiObject, IRttiObject<VirtualFuncti
         var reader = module.PEFile.CreateReaderAtRva(rva - (uint)module.Platform.PointerSize);
         var colRva = module.PEFile.AddressToRva(reader.ReadNativeInt(module.Platform.Is32Bit));
         CompleteObjectLocator = module.GetOrAddObject<RttiCompleteObjectLocator>(colRva) ?? throw new ArgumentException(null, nameof(rva));
-        var builder = ImmutableArray.CreateBuilder<ulong>();
+        var builder = ImmutableArray.CreateBuilder<uint>();
 
         while (reader.CanRead((uint)module.Platform.PointerSize))
         {
@@ -24,7 +24,7 @@ public sealed class VirtualFunctionTable : RttiObject, IRttiObject<VirtualFuncti
             if (!module.IsValidFunctionPointer(pointer))
                 break;
 
-            builder.Add(pointer);
+            builder.Add(module.PEFile.AddressToRva(pointer));
         }
 
         FunctionPointers = builder.DrainToImmutable();

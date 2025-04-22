@@ -62,7 +62,7 @@ internal static class Program
                 {
                     foreach (var method in locator.VTable.FunctionPointers)
                     {
-                        writer.WriteLine($"// {method:X16}");
+                        writer.WriteLine($"// {method:X8}");
                     }
                 }
 
