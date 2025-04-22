@@ -52,9 +52,12 @@ internal static class BinaryStreamReaderExtensions
         var offset = reader.Offset;
         var buffer = ArrayPool<byte>.Shared.Rent(next.Length);
         reader.ReadBytes(buffer);
-        reader.Offset = offset;
         bool isNext = buffer.AsSpan(0, next.Length).SequenceEqual(next);
         ArrayPool<byte>.Shared.Return(buffer);
+
+        if (!isNext || !advancePast)
+            reader.Offset = offset;
+
         return isNext;
     }
 
