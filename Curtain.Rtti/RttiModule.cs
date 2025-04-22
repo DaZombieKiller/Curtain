@@ -89,7 +89,9 @@ public sealed partial class RttiModule
                 // };
                 //
                 reader.Offset -= (uint)_platform.PointerSize * 2;
+                var rva = reader.Rva;
                 address = reader.ReadNativeInt(_platform.Is32Bit);
+                reader.Offset += (uint)_platform.PointerSize + 1;
 
                 if (address < (uint)_platform.PointerSize)
                     continue;
@@ -124,7 +126,7 @@ public sealed partial class RttiModule
                 if (_platform.Is32Bit)
                     locator.TypeDescriptor -= (uint)_file.OptionalHeader.ImageBase;
 
-                if (locator.TypeDescriptor != reader.Rva - (uint)_platform.PointerSize)
+                if (locator.TypeDescriptor != rva)
                     continue;
 
                 GetOrAddObject<VirtualFunctionTable>(_file.AddressToRva(address));
